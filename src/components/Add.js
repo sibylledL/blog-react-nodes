@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import ReactQuill from 'react-quill';
-// import { Redirect } from 'react-router-dom';
+import ReactQuill, { Toolbar } from 'react-quill';
+import { Redirect } from 'react-router-dom';
 
 class Add extends Component{
 
@@ -12,7 +12,8 @@ class Add extends Component{
         date:"",
         text:"",
         img:"",
-        isPublished:false
+        isPublished:false,
+        status:""
     }
   }
 
@@ -51,11 +52,17 @@ onChangeImg=(e)=> {
 }
 
 
+
   addArticle=(e)=>{
+    let self = this
     axios.post('http://localhost:3004/apiarticle/add', this.state)
     .then(function(response){
-      console.log(response);
-      })
+      console.log(response.status);
+      if(response.status === 200){
+        let status = response.status
+        self.setState({status: response.status})
+      }
+    })
     .catch(function (error) {
       console.log(error);
     });
@@ -66,29 +73,52 @@ onChangeImg=(e)=> {
       this.addArticle()
     }
 
+  Addmodules = {
+    modules:{
+      toolbar: [
+        [{ 'header': [1, 2, false] }],
+         ['bold', 'italic', 'underline','strike', 'blockquote'],
+         [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+         ['link', 'image'],
+         ['clean']
+      ]
+    }
+    }
 
   render(){
 
+    const renderArticle=()=>{
+      if(this.state.status===200){
+        return(
+          <Redirect push to='/admin/office/articles'/>
+        )
+      }else{
+        return(
+          <div>
+              <div>
+                Ajouter un article
+              </div>
+              <div>
+                  <p>Titre</p>
+                  <input type="text" name="title" onChange={this.onChange}></input>
+                  <p>Date:</p>
+                  <input type="date" name="date" onChange={this.onChange}></input>
+                  <p>Texte</p>
+                  <ReactQuill theme="snow" modules={this.Addmodules.modules} className="textarea" name="texte" onChange={this.onChangeText}/>
+                  <p>illus</p>
+                  <input type="file" name="img" onChange={this.onChangeImg}></input>
+                  <p>publier ?</p>
+                  <input type="checkbox" name="isPublished" onClick={this.isPublished}></input>
+                  <button onClick={this.addArticle}>ADD</button>
+              </div>
+          </div>
+        )
+      }
+    }
+
     return(
       <div>
-          <div>
-            Ajouter un article
-          </div>
-          <div>
-            <form method="POST" action="/apiarticle/add" encType='multipart/form-data'>
-              <p>Titre</p>
-              <input type="text" name="title" onChange={this.onChange}></input>
-              <p>Date:</p>
-              <input type="date" name="date" onChange={this.onChange}></input>
-              <p>Texte</p>
-              <ReactQuill className="textarea" name="texte" onChange={this.onChangeText}/>
-              <p>illus</p>
-              <input type="file" name="img" onChange={this.onChangeImg}></input>
-              <p>publier ?</p>
-              <input type="checkbox" name="isPublished" onClick={this.isPublished}></input>
-              <button value="SUBMIT" onClick={this.addArticle}>ADD</button>
-            </form>
-          </div>
+        {renderArticle()}
       </div>
     )
   }

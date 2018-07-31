@@ -444,7 +444,7 @@ articleRouter.get('/', (req, res) => {
 
 articleRouter.post('/add', (req, res) => {
   const newArticle = new __WEBPACK_IMPORTED_MODULE_2__models_article__["a" /* default */](req.body);
-  console.log(req.body.img);
+  console.log(req.body);
   if (req.body.img) {
     __WEBPACK_IMPORTED_MODULE_3_cloudinary___default.a.v2.uploader.upload(req.body.img, function (err, result) {
       if (err) console.log(err);
@@ -477,7 +477,6 @@ articleRouter.get('/articles', (req, res) => {
 });
 
 articleRouter.get('/articles/delete/:id', (req, res) => {
-
   let query = { _id: req.params.id };
   __WEBPACK_IMPORTED_MODULE_2__models_article__["a" /* default */].findByIdAndRemove(query, err => {
     if (err) res.send(err);

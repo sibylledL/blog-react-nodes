@@ -69,6 +69,18 @@ class Article extends Component{
     })
   }
 
+  Addmodules = {
+    modules:{
+      toolbar: [
+        [{ 'header': [1, 2, false] }],
+         ['bold', 'italic', 'underline','strike', 'blockquote'],
+         [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+         ['link', 'image'],
+         ['clean']
+      ]
+    }
+    }
+
   render(){
     const render=() => {
       if(this.state.status===200){
@@ -86,7 +98,7 @@ class Article extends Component{
               <p>{this.state.article.isPublished ? "oui" : "non"}</p>
               </div>
               <p>Texte:</p>
-              <ReactQuill className="textarea" name="texte" value={this.state.article.text} onChange={this.onChangeText}/>
+              <ReactQuill className="textarea" modules={this.Addmodules.modules} name="texte" value={this.state.article.text} onChange={this.onChangeText}/>
               <div className="editCall">
                   <span onClick={this.sendEdit}>EDIT</span>
               </div>

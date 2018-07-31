@@ -7,7 +7,8 @@ class Public extends Component{
   constructor(props){
     super(props)
     this.state={
-      articles:""
+      articles:"",
+      publishedArticles:""
     }
   }
 
@@ -19,6 +20,12 @@ class Public extends Component{
         articles:res.articles
       })
       console.log(res)
+
+      const publishedArticles = this.state.articles.filter(article=>article.isPublished===true)
+      this.setState({
+        publishedArticles : publishedArticles
+      })
+      console.log(this.state.publishedArticles);
     })
     .catch((err) => {
       console.log(err);
@@ -33,8 +40,9 @@ class Public extends Component{
 
       const renderArticles =() => {
         console.log(this.state);
-      if(this.state.articles){
-        return this.state.articles.map((article) => {
+      if(this.state.publishedArticles){
+        console.log(this.state.publishedArticles);
+        return this.state.publishedArticles.map((article) => {
         return (
           <div className="showarticle">
             <h4>{article.title}</h4>

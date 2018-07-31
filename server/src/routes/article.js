@@ -17,7 +17,7 @@ articleRouter.get('/', (req, res) => {
 
 articleRouter.post('/add', (req, res) => {
   const newArticle = new Article(req.body)
-  console.log(req.body.img);
+  console.log(req.body);
   if(req.body.img){
     cloudinary.v2.uploader.upload(req.body.img, function(err,result) {
     if(err) console.log(err)
@@ -51,7 +51,6 @@ articleRouter.get('/articles', (req, res) => {
 })
 
 articleRouter.get('/articles/delete/:id',(req, res) => {
-
   let query = {_id:req.params.id}
   Article.findByIdAndRemove(query,(err) => {
     if(err) res.send(err)
